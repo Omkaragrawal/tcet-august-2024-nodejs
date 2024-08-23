@@ -1,0 +1,32 @@
+<p>
+    <h1> Details for {{ username }}</h1>
+    <style>
+        table, th, td {
+  border: 1px solid black;
+  border-collapse: collapse;
+}
+</style>
+<table>
+    <tr>
+        <th>Name</th>
+        <th>Email</th>
+        <th>City</th>
+        <th>Phone</th>
+        <th>Website</th>
+    </tr>
+    <tr>
+        {{!-- https://pastebin.com/wt9mxiTd --}}
+        <td> {{ name }} </td>
+        <td> {{ email }}</td>
+        <td> 
+            {{#with address }}
+            {{ city }}
+            {{/with}}
+        </td>
+        <td> {{ phone }} </td>
+        <td> {{ website }} </td>
+    </tr>
+</table>
+
+</p>
+
