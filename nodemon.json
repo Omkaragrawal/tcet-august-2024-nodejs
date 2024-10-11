@@ -1,0 +1,8 @@
+{
+    "verbose": true,
+    "ignore": ["node_modules", "build", ".git", "public"],
+    "ext": "ts",
+    "execMap": {
+        "ts": "tsx"
+    }
+}

@@ -1,10 +1,9 @@
-// npm install mongoose
-const mongoose = require('mongoose');
+import mongoose from'mongoose';
 
 async function connectDatabase() {
     try {
         const client = await mongoose.connect(
-            process.env.mongo_db_connection_string
+            process.env.mongo_db_connection_string as string
         );
         console.log('Database connected!');
         return client;
@@ -14,4 +13,4 @@ async function connectDatabase() {
     }
 }
 
-module.exports.default = connectDatabase();
+export default connectDatabase();
