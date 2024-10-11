@@ -1,4 +1,5 @@
-import express, { Request, Response } from 'express';
+import express, { NextFunction, Request, Response } from 'express';
+import { query, body, validationResult } from 'express-validator';
 
 import { middleWareWrapper } from '../tools';
 
@@ -43,7 +44,15 @@ router.get('/find/:userName', middleWareWrapper(async function (req: Request, re
 /** 
  * http://localhost:3334/users/search/?city=
  */
-router.get('/search', middleWareWrapper(async function (req: Request, res: Response) {
+router.get('/search', 
+  query('city').notEmpty().isString().isAlpha().trim().withMessage('Invalid city provided'), 
+  middleWareWrapper(async function (req: Request, res: Response) {
+    const results = validationResult(req);
+    if (!results.isEmpty()) {
+      res.send({ errors: results.array() });
+      return;
+    }
+
   const userData = await UserModel.findOne({ 'address.city': req.query.city, });
 
   if (!userData) {
@@ -53,7 +62,22 @@ router.get('/search', middleWareWrapper(async function (req: Request, res: Respo
   res.send(userData);
 }));
 
-router.post('/new', middleWareWrapper(async function(req: Request, res: Response) {
+router.post('/new', 
+  body().isObject(),
+  body('id').notEmpty().isNumeric().toInt(),
+  body('name').notEmpty().isString(),
+  body('email').notEmpty().isEmail().normalizeEmail().toLowerCase(),
+  body('address').notEmpty().isObject(),
+  body('phone').notEmpty().isString().isMobilePhone('any').withMessage('Invalid Phone'),
+  body('website').notEmpty().isString().isURL(),
+  body('company').notEmpty().isObject(),
+  middleWareWrapper(async function(req: Request, res: Response) {
+    const results = validationResult(req);
+    if (!results.isEmpty()) {
+      res.send({ errors: results.array() });
+      return;
+    }
+
   const newUserData = req.body;
 
   if (typeof newUserData === 'object') {
